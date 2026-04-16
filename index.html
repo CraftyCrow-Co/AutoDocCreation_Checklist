@@ -250,7 +250,6 @@ const PHASES = [
         {text:'Go to console.cloud.google.com and sign in', note:'Use the Google account that will own this tool permanently'},
         {text:'Click the project selector at the top → "New Project"'},
         {text:'Name it AutoDoc (or anything you like) → click Create'},
-        {text:'Wait ~30 seconds → click the notification bell → select your new project', note:'Make sure it shows in the top bar before continuing'},
       ]},
       {label:'Enable required APIs', items:[
         {text:'Go to APIs & Services → Library in the left sidebar'},
@@ -258,7 +257,6 @@ const PHASES = [
         {text:'Search "Google Forms API" → click it → click Enable'},
         {text:'Search "Google Drive API" → click it → click Enable'},
         {text:'Search "Google Sites API" → click it → click Enable (optional — only needed for Sites documentation)'},
-        {text:'Confirm all 4 APIs appear in APIs & Services → Enabled APIs & Services'},
       ]},
       {flow:{title:'API enablement flow', rows:[
         {dot:'#4ade9a', text:'console.cloud.google.com → select project'},
@@ -361,10 +359,11 @@ const PHASES = [
     difficulty:'easy', color:'#555550', bg:'rgba(136,135,128,.12)',
     sections:[
       {label:'Set up GitHub repo', items:[
+        {text:'This phase is only needed if you want the tool to analyse Google Apps Scripts that are attached to your Sheets. If you only want Sheet/Form documentation and do not care about scripts — skip this entire phase.', note:'If you already have a GitHub repo containing your Apps Script backups, skip ahead to the "Add to Render environment" section and use your existing repo.'},
         {text:'Go to github.com → sign in or create a free account'},
-        {text:'Click + → New repository → name it App-Scripts-Backup → Create repository'},
-        {text:'Go to Settings → Developer settings → Personal access tokens → Tokens (classic)'},
-        {text:'Generate new token → give it a name → select repo scope (read access) → Generate'},
+        {text:'Click + → New repository → name it App-Scripts-Backup → Create repository', note:'This repo is where your .gs script files will live. The tool searches for a folder named after each Sheet\'s ID to find its scripts automatically.'},
+        {text:'Go to Settings → Developer settings → Personal access tokens → Fine Grained Tokens'},
+        {text:'Generate new token → Give it a name → Select repo → Add Permissions → Contents(read access) → Generate'},
         {text:'Copy the token immediately — GitHub only shows it once'},
       ]},
       {label:'Add to Render environment', items:[
