@@ -355,11 +355,10 @@ const PHASES = [
   },
   {
     id:'phase-5', num:'05', title:'GitHub for Apps Script analysis',
-    subtitle:'Optional — enables AI analysis of Google Apps Scripts',
+    subtitle:'Optional — enables AI analysis of Google Apps Scripts. This phase is only needed if you want the tool to analyse Google Apps Scripts that are attached to your Sheets. If you only want Sheet/Form documentation and do not care about scripts — skip this entire phase.', note:'If you already have a GitHub repo containing your Apps Script backups, skip ahead to the "Add to Render environment" section and use your existing repo.',
     difficulty:'easy', color:'#555550', bg:'rgba(136,135,128,.12)',
     sections:[
       {label:'Set up GitHub repo', items:[
-        {text:'This phase is only needed if you want the tool to analyse Google Apps Scripts that are attached to your Sheets. If you only want Sheet/Form documentation and do not care about scripts — skip this entire phase.', note:'If you already have a GitHub repo containing your Apps Script backups, skip ahead to the "Add to Render environment" section and use your existing repo.'},
         {text:'Go to github.com → sign in or create a free account'},
         {text:'Click + → New repository → name it App-Scripts-Backup → Create repository', note:'This repo is where your .gs script files will live. The tool searches for a folder named after each Sheet\'s ID to find its scripts automatically.'},
         {text:'Go to Settings → Developer settings → Personal access tokens → Fine Grained Tokens'},
