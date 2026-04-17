@@ -136,6 +136,29 @@ h1 .accent{color:var(--accent)}
 .tip{background:rgba(96,184,240,.06);border-left:2px solid var(--blue);border-radius:0 6px 6px 0;padding:9px 13px;margin-top:8px;font-size:12.5px;color:var(--tip-col);line-height:1.6}
 .warn{background:rgba(251,191,36,.06);border-left:2px solid var(--yellow);border-radius:0 6px 6px 0;padding:9px 13px;margin-top:8px;font-size:12.5px;color:var(--warn-col);line-height:1.6}
 
+
+
+/* Download file button */
+.dl-btn{display:inline-flex;align-items:center;gap:7px;margin-top:8px;padding:8px 14px;background:rgba(232,112,58,.08);border:1px solid rgba(232,112,58,.3);border-radius:7px;font-family:var(--mono);font-size:11px;color:var(--accent);cursor:pointer;transition:all .15s;text-decoration:none}
+.dl-btn:hover{background:rgba(232,112,58,.15);border-color:rgba(232,112,58,.5)}
+.dl-btn svg{width:13px;height:13px;flex-shrink:0}
+
+/* Collapsible code section inside item */
+.collapsible-toggle{display:flex;align-items:center;gap:8px;margin-top:8px;padding:7px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-family:var(--mono);font-size:11px;color:var(--muted);transition:all .15s;user-select:none}
+.collapsible-toggle:hover{border-color:var(--border2);color:var(--text)}
+.collapsible-toggle .ct-icon{font-size:9px;transition:transform .2s;flex-shrink:0}
+.collapsible-toggle.open .ct-icon{transform:rotate(90deg)}
+.collapsible-toggle .ct-label{flex:1}
+.collapsible-body{display:none;margin-top:4px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.collapsible-body.open{display:block}
+.coll-section{padding:10px 12px;border-bottom:1px solid var(--border)}
+.coll-section:last-child{border-bottom:none}
+.coll-heading{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.coll-note{font-size:12px;color:var(--muted);margin-bottom:6px;line-height:1.5}
+.coll-code{background:var(--bg2);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.coll-code-header{display:flex;align-items:center;justify-content:flex-end;padding:5px 10px;background:var(--bg3);border-bottom:1px solid var(--border)}
+.coll-code pre{padding:10px 12px;font-family:var(--mono);font-size:11.5px;line-height:1.7;color:var(--code-text);white-space:pre-wrap;word-break:break-all;margin:0}
+
 /* Flow diagram */
 .flow{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-top:10px}
 .flow-title{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
@@ -202,7 +225,7 @@ h1 .accent{color:var(--accent)}
     <h1>Workspace <span class="accent">AutoDoc</span><br>Setup Checklist</h1>
     <p class="hero-desc">A complete step-by-step guide to build this tool from scratch. Works for both technical and non-technical users. Follow the phases in order.</p>
     <div class="hero-stats">
-      <div class="stat"><div class="stat-num">7</div><div class="stat-lbl">Phases</div></div>
+      <div class="stat"><div class="stat-num">9</div><div class="stat-lbl">Phases</div></div>
       <div class="stat"><div class="stat-num" id="total-count">54</div><div class="stat-lbl">Steps</div></div>
       <div class="stat"><div class="stat-num">~2h</div><div class="stat-lbl">Est. time</div></div>
       <div class="stat"><div class="stat-num">Free</div><div class="stat-lbl">Cost</div></div>
@@ -226,6 +249,7 @@ h1 .accent{color:var(--accent)}
     <a href="#phase-4" class="phase-nav-btn">04 Gemini Keys</a>
     <a href="#phase-5" class="phase-nav-btn">05 GitHub</a>
     <a href="#phase-6" class="phase-nav-btn">06 Code Setup</a>
+    <a href="#phase-local" class="phase-nav-btn">6b Local Test</a>
     <a href="#phase-7" class="phase-nav-btn">07 Render Deploy</a>
     <a href="#phase-8" class="phase-nav-btn">08 First Run</a>
   </div>
@@ -250,6 +274,7 @@ const PHASES = [
         {text:'Go to console.cloud.google.com and sign in', note:'Use the Google account that will own this tool permanently'},
         {text:'Click the project selector at the top → "New Project"'},
         {text:'Name it AutoDoc (or anything you like) → click Create'},
+        {text:'Wait ~30 seconds → click the notification bell → select your new project', note:'Make sure it shows in the top bar before continuing'},
       ]},
       {label:'Enable required APIs', items:[
         {text:'Go to APIs & Services → Library in the left sidebar'},
@@ -257,6 +282,7 @@ const PHASES = [
         {text:'Search "Google Forms API" → click it → click Enable'},
         {text:'Search "Google Drive API" → click it → click Enable'},
         {text:'Search "Google Sites API" → click it → click Enable (optional — only needed for Sites documentation)'},
+        {text:'Confirm all 4 APIs appear in APIs & Services → Enabled APIs & Services'},
       ]},
       {flow:{title:'API enablement flow', rows:[
         {dot:'#4ade9a', text:'console.cloud.google.com → select project'},
@@ -355,14 +381,14 @@ const PHASES = [
   },
   {
     id:'phase-5', num:'05', title:'GitHub for Apps Script analysis',
-    subtitle:'Optional — enables AI analysis of Google Apps Scripts. This phase is only needed if you want the tool to analyse Google Apps Scripts that are attached to your Sheets. If you only want Sheet/Form documentation and do not care about scripts — skip this entire phase.', note:'If you already have a GitHub repo containing your Apps Script backups, skip ahead to the "Add to Render environment" section and use your existing repo.',
+    subtitle:'Optional — enables AI analysis of Google Apps Scripts',
     difficulty:'easy', color:'#555550', bg:'rgba(136,135,128,.12)',
     sections:[
       {label:'Set up GitHub repo', items:[
         {text:'Go to github.com → sign in or create a free account'},
-        {text:'Click + → New repository → name it App-Scripts-Backup → Create repository', note:'This repo is where your .gs script files will live. The tool searches for a folder named after each Sheet\'s ID to find its scripts automatically.'},
-        {text:'Go to Settings → Developer settings → Personal access tokens → Fine Grained Tokens'},
-        {text:'Generate new token → Give it a name → Select repo → Add Permissions → Contents(read access) → Generate'},
+        {text:'Click + → New repository → name it App-Scripts-Backup → Create repository', note:'Required only for Apps Script analysis. If you already have a repo with your script backups, use that instead. If you only need Sheets/Forms documentation and want to ignore bounded scripts, you can skip this entire phase.'},
+        {text:'Go to Settings → Developer settings → Personal access tokens → Tokens (classic)'},
+        {text:'Generate new token → give it a name → select repo scope (read access) → Generate'},
         {text:'Copy the token immediately — GitHub only shows it once'},
       ]},
       {label:'Add to Render environment', items:[
@@ -383,8 +409,16 @@ const PHASES = [
     sections:[
       {label:'Required files', items:[
         {text:'Create a new folder on your computer called workspace-autodoc'},
-        {text:'Add server.js — the main backend (all AI, Google API, Drive cache logic)'},
-        {text:'Add index.html — the frontend UI (all the interactive features)'},
+        {text:'Add server.js — the main backend', note:'Download using the button below. No manual code edits needed — all config is via environment variables.', download:{file:'server.js', label:'Download server.js'}, collapsible:{label:'server.js — what you can configure', sections:[
+          {heading:'Gemini models (auto-fallback order)', note:'Edit this list if you want to add/remove models. Do NOT add gemini-2.0-flash — it is not on the free tier.', code:"// Model IDs for the @google/genai SDK (v1beta endpoint via Gemini Developer API)\n// Free tier RPD: 2.5-flash-lite=20, 2.5-flash=20, 1.5-flash=1500, 1.5-flash-8b=1500\n// If a model 404s it means it's not available on your API key tier \u2014 it will be auto-skipped.\nconst GEMINI_MODELS = [\n  { id: 'gemini-2.5-flash',        rpd: 20   }, // primary \u2014 fast, free tier\n  { id: 'gemini-2.5-flash-lite',   rpd: 30   }, // lighter 2.5 fallback\n  { id: 'gemini-1.5-flash',        rpd: 1500 }, // high quota workhorse\n  { id: 'gemini-1.5-flash-latest', rpd: 1500 }, // latest alias fallback\n  { id: 'gemini-1.5-flash-8b',     rpd: 1500 }, // smallest, highest availability\n];"},
+          {heading:'Multi-key client loader', note:'Reads GEMINI_API_KEY, GEMINI_API_KEY_2 ... GEMINI_API_KEY_10 from env vars. No code change needed — just add more keys in Render.', code:"function loadGeminiClients() {\n  const keys = [];\n  // Load GEMINI_API_KEY, GEMINI_API_KEY_2, GEMINI_API_KEY_3 ... GEMINI_API_KEY_10\n  if (process.env.GEMINI_API_KEY) keys.push(process.env.GEMINI_API_KEY);\n  for (let i = 2; i <= 10; i++) {\n    const k = process.env[`GEMINI_API_KEY_${i}`];\n    if (k) keys.push(k);\n  }\n  if (keys.length === 0) throw new Error('No GEMINI_API_KEY found in .env');\n  console.log(`\ud83d\udd11 Loaded ${keys.length} Gemini API key(s)`);\n  return keys.map((apiKey, i) => ({\n    index: i + 1,\n    apiKey,\n    client: new GoogleGenAI({ apiKey }),\n    exhaustedModels: new Set(), // models that hit daily quota on this key\n    disabled: false,            // true if key is invalid/revoked\n  }));\n}"},
+          {heading:'All environment variables used by server.js', note:'Set these in your .env file (local) or Render environment (production). Required ones are marked.', code:"# REQUIRED\nGEMINI_API_KEY=            # Your first Gemini key from aistudio.google.com\nGOOGLE_CLIENT_ID=          # From Google Cloud Console \u2192 Credentials\nGOOGLE_CLIENT_SECRET=      # From Google Cloud Console \u2192 Credentials\nOAUTH_REDIRECT_URI=        # Your app URL + /auth/callback\nGOOGLE_SERVICE_ACCOUNT_JSON= # Full JSON of service-account.json as one line\nPORT=3000                  # Server port\n\n# RECOMMENDED (for quota rotation)\nGEMINI_API_KEY_2=          # Second Gemini key (different Google account)\nGEMINI_API_KEY_3=          # Third Gemini key (different Google account)\n\n# OPTIONAL\nGITHUB_REPO=               # owner/repo \u2014 for Apps Script analysis\nGITHUB_TOKEN=              # GitHub personal access token\nACCESS_PASSWORD=           # Password to protect the app (leave blank = no password)"},
+        ]}},
+        {text:'Add index.html — the frontend UI', note:'Download using the button below. No manual code edits needed.', download:{file:'index.html', label:'Download index.html'}, collapsible:{label:'index.html — what you can configure', sections:[
+          {heading:'Request timeout', note:'Change this if your sheets are very large and timing out. Currently set to 8 minutes.', code:"// In the generate() function \u2014 around line 2461\nvar _tmsOut = 480000; // 8 minutes in milliseconds\n// Change to 600000 for 10 minutes if needed"},
+          {heading:'Live sync poll interval', note:'How often the frontend checks for new versions from other users. Currently every 30 seconds.', code:"// In startPolling() function\n_pollInterval = setInterval(function() { \n  pollForNewVersion(url); \n}, 30000); // 30000ms = 30 seconds\n// Change to 60000 for 1 minute if you want less frequent checks"},
+          {heading:'Drive link pill text', note:'The label shown on the blue Drive button after generation.', code:"// In the generate success handler\nshowDrivePill(data.driveCacheUrl, '\ud83d\udcc1 View saved versions in Drive');\n// Change the label text to anything you prefer"},
+        ]}},
         {text:'Add package.json with these contents:', code:{lang:'json', content:'{\n  "name": "workspace-autodoc",\n  "version": "1.0.0",\n  "type": "module",\n  "scripts": { "start": "node server.js" },\n  "dependencies": {\n    "@google/genai": "^1.0.0",\n    "docx": "^8.0.0",\n    "dotenv": "^16.0.0",\n    "express": "^4.18.0",\n    "marked": "^9.0.0",\n    "puppeteer": "^21.0.0"\n  }\n}'}},
       ]},
       {label:'Local .env file (for local development only)', items:[
@@ -396,6 +430,51 @@ const PHASES = [
       ]},
       {label:'Push to GitHub', items:[
         {text:'Run these commands in your project folder:', code:{lang:'bash', content:'git init\ngit add .\ngit commit -m "Initial commit"\ngit remote add origin https://github.com/yourusername/workspace-autodoc.git\ngit push -u origin main'}},
+      ]},
+    ]
+  },
+  {
+    id:'phase-local', num:'6b', title:'Test locally before deploying',
+    subtitle:'Run on your own computer first to catch issues early — saves a lot of back-and-forth on Render',
+    difficulty:'easy', color:'#0f6e56', bg:'rgba(29,158,117,.12)',
+    sections:[
+      {label:'Install Node.js', items:[
+        {text:'Go to nodejs.org → download the LTS version → install it', note:'LTS = Long Term Support — the stable version. Required to run server.js.'},
+        {text:'Verify install worked — open terminal and run:', code:{lang:'bash', content:'node --version\nnpm --version'}},
+        {text:'You should see v20.x.x and 10.x.x — if not, restart your terminal and try again'},
+      ]},
+      {label:'Install project dependencies', items:[
+        {text:'Open terminal → navigate into your project folder:', code:{lang:'bash', content:'cd path/to/workspace-autodoc'}},
+        {text:'Install all packages:', code:{lang:'bash', content:'npm install'}},
+        {text:'First run takes 2-4 minutes — puppeteer downloads a copy of Chromium for screenshots', note:'You will see a node_modules/ folder appear. Never commit this to GitHub.'},
+      ]},
+      {label:'Set up local .env file', items:[
+        {text:'Create a file named exactly .env in your project folder (with the dot at the start)'},
+        {text:'Paste in all your credentials:', code:{lang:'env', content:'GEMINI_API_KEY=AIzaSy-your-first-key\nGEMINI_API_KEY_2=AIzaSy-your-second-key\nGEMINI_API_KEY_3=AIzaSy-your-third-key\nGOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com\nGOOGLE_CLIENT_SECRET=GOCSPX-your-secret\nOAUTH_REDIRECT_URI=http://localhost:3000/auth/callback\nGOOGLE_SERVICE_ACCOUNT_JSON={"type":"service_account",...}\nGITHUB_REPO=username/App-Scripts-Backup\nGITHUB_TOKEN=ghp_your-token\nPORT=3000'}},
+        {warn:'For local testing, OAUTH_REDIRECT_URI must be http://localhost:3000/auth/callback — not your Render URL. You also need to add this exact URI in Google Cloud Console → Credentials → your OAuth Client → Authorised redirect URIs.'},
+      ]},
+      {label:'Start the server', items:[
+        {text:'In your terminal (inside the project folder):', code:{lang:'bash', content:'npm start'}},
+        {text:'You should see these lines in the terminal:', code:{lang:'log', content:'✅ Loaded 3 Gemini API key(s)\n✅  Workspace AutoDoc running at http://localhost:3000\n✅ Service account token obtained'}},
+        {text:'If you see errors, check the troubleshooting items below before continuing'},
+      ]},
+      {label:'Test in browser', items:[
+        {text:'Open http://localhost:3000 in your browser'},
+        {text:'Click Sign in with Google → sign in with your account'},
+        {text:'After login, check terminal for: Drive cache: captured fresh OAuth token'},
+        {text:'Paste a Google Sheet URL you have access to → click Generate Documentation'},
+        {text:'Watch the terminal — you will see progress logs as it fetches data, takes screenshots, and calls Gemini'},
+        {text:'After 2-7 minutes, confirm: 💾 Saved version [generated] appears in the terminal'},
+        {text:'Confirm the documentation with screenshots appears in the browser'},
+        {tip:'Everything working locally? Great — proceed to Phase 07 to deploy on Render. The same env vars go there.'},
+      ]},
+      {label:'Common local errors and fixes', items:[
+        {text:'Cannot find module → run npm install again', note:'node_modules is missing or incomplete — always run npm install before npm start'},
+        {text:'GEMINI_API_KEY not found → check your .env file name (must be .env, not env.txt)', note:'On Windows, Explorer hides file extensions. Open the file in a text editor to confirm the name.'},
+        {text:'OAuth redirect_uri mismatch → add http://localhost:3000/auth/callback to Google Cloud Console → Credentials → OAuth Client → Authorised redirect URIs'},
+        {text:'Service account JSON error → validate your JSON at jsonlint.com — a missing quote or comma breaks it'},
+        {text:'Port 3000 already in use → another app is using it. Change PORT=3001 in .env and open http://localhost:3001'},
+        {text:'Puppeteer/Chrome error → run npm install puppeteer --save to reinstall it'},
       ]},
     ]
   },
@@ -543,6 +622,44 @@ function badgeHtml(d){
   return `<span class="badge ${cls}">${lbl}</span>`;
 }
 
+
+function collapsibleHtml(coll, id) {
+  const tid = 'ct_' + id;
+  const bid = 'cb2_' + id;
+  const sectionsHtml = coll.sections.map((s, si) => {
+    const code = s.code || '';
+    const escaped = code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const copyId = tid + '_c' + si;
+    return `<div class="coll-section">
+      <div class="coll-heading">${s.heading}</div>
+      ${s.note ? `<div class="coll-note">${s.note}</div>` : ''}
+      <div class="coll-code">
+        <div class="coll-code-header">
+          <button class="copy-btn" onclick="copyCode(this,${JSON.stringify(code)})">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span class="copy-label">copy</span>
+          </button>
+        </div>
+        <pre>${escaped}</pre>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="collapsible-toggle" id="${tid}" onclick="toggleCollapsible('${tid}','${bid}')">
+    <span class="ct-icon">&#9654;</span>
+    <span class="ct-label">${coll.label}</span>
+  </div>
+  <div class="collapsible-body" id="${bid}">${sectionsHtml}</div>`;
+}
+
+function toggleCollapsible(tid, bid) {
+  const toggle = document.getElementById(tid);
+  const body   = document.getElementById(bid);
+  if (!toggle || !body) return;
+  const isOpen = body.classList.contains('open');
+  toggle.classList.toggle('open', !isOpen);
+  body.classList.toggle('open', !isOpen);
+}
+
 function codeBlockHtml(code, idPrefix){
   const escaped = code.content.replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const rawText = code.content;
@@ -581,6 +698,8 @@ function renderPhases(){
           if(item.note) extra += `<div class="item-note">${item.note}</div>`;
           if(item.tip)  extra += `<div class="tip">${item.tip}</div>`;
           if(item.warn) extra += `<div class="warn">${item.warn}</div>`;
+          if(item.collapsible) extra += collapsibleHtml(item.collapsible, id);
+          if(item.download) extra += `<a class="dl-btn" href="${item.download.file}" download="${item.download.file}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>${item.download.label}</a>`;
           return `<div class="item" onclick="toggleItem('${id}')">
             <input type="checkbox" class="item-cb" id="cb-${id}" ${done?'checked':''} onclick="event.stopPropagation();toggleItem('${id}')">
             <div class="item-body">
